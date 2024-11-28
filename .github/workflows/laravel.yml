@@ -52,6 +52,7 @@ jobs:
             composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
             php artisan clear-compiled
             php artisan optimize
+            php artisan migrate
             php artisan up
             php artisan config:clear
             php artisan cache:clear
