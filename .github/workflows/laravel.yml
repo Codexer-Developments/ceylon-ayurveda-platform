@@ -3,7 +3,8 @@ name: Laravel CI/CD
 on:
   push:
     branches:
-      - development
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,6 +15,7 @@ jobs:
 
       - name: Set temporary environment variables
         run: |
+          echo "MATTERMOST_WEBHOOK_URL=${{ secrets.MATTERMOST_WEBHOOK_URL }}" >> $GITHUB_ENV
           echo "APP_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
           echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "AUTHOR_NAME=${{ github.actor }}" >> $GITHUB_ENV
@@ -21,7 +23,7 @@ jobs:
           echo "AUTHOR_LINK=https://github.com/${{ github.actor }}" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=[$(git log --format=%B -n 1 ${{ github.sha }})](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" >> $GITHUB_ENV
         continue-on-error: true
-        
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -30,9 +32,10 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
+
       # - name: Run tests
       #   run: php artisan test
-      
+
       - name: Deploy to Digital Ocean Master
         if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
@@ -41,24 +44,19 @@ jobs:
           username: ${{ secrets.DIGITAL_OCEAN_USERNAME }}
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
           script: |
-             cd /var/www/central-api
-             echo "Deployment started ..."
-             (php artisan down) || true
-             git reset --hard
-             git pull origin main
-             git pull
-             git submodule init
-             git submodule update --remote
-             composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
-             php artisan clear-compiled
-             php artisan optimize
-             php artisan migrate --force
-             php artisan db:seed --force
-             php artisan up
-             php artisan config:clear
-             php artisan cache:clear
-             echo "Deployment finished!"
-             
+            cd /var/www/merchant-panel
+            echo "Deployment started ..."
+            (php artisan down) || true
+            git pull origin main
+            git pull
+            composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
+            php artisan clear-compiled
+            php artisan optimize
+            php artisan up
+            php artisan config:clear
+            php artisan cache:clear
+            echo "Deployment finished!"
+
       - name: Deploy to Digital Ocean Development
         if: github.ref == 'refs/heads/development'
         uses: appleboy/ssh-action@master
@@ -67,19 +65,42 @@ jobs:
           username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
           script: |
-              cd /var/www/central-api-dev
-              echo "Deployment started ..."
-              (php artisan down) || true
-              git reset --hard
-              git pull origin development
-              git pull
-              git submodule init
-              git submodule update --remote
-              composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
-              php artisan clear-compiled
-              php artisan optimize
-              php artisan migrate --force
-              php artisan db:seed
-              php artisan up
-              php artisan config:clear
-              php artisan cache:clear
+            cd /var/www/merchant-panel-dev
+            echo "Deployment started ..."
+            (php artisan down) || true
+            git pull origin development
+            git pull
+            composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
+            php artisan clear-compiled
+            php artisan optimize
+            php artisan up
+            php artisan config:clear
+            php artisan cache:clear
+
+      - name: Deploy to Digital Ocean Staging
+        if: github.ref == 'refs/heads/staging'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_HOST_DEV }}
+          username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
+          script: |
+            cd /var/www/merchant-panel-staging
+            echo "Deployment started ..."
+            (php artisan down) || true
+            git pull origin staging
+            git pull
+            composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
+            php artisan clear-compiled
+            php artisan optimize
+            php artisan up
+            php artisan config:clear
+            php artisan cache:clear
+
+      - name: Switch Load Balancer
+        run: |
+          # Use Digital Ocean CLI or API to switch traffic from blue to green droplets
+          # Example: doctl compute load-balancer update $LOAD_BALANCER_ID --forwarding-rules "entry:forwarding_rule_$NEW_DROPLET_ID:least_connections"
+          echo "Deployment finished!"
+
+
