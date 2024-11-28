@@ -3,10 +3,7 @@ name: Laravel CI/CD
 on:
   push:
     branches:
-      - main
       - development
-      - staging
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +14,6 @@ jobs:
 
       - name: Set temporary environment variables
         run: |
-          echo "MATTERMOST_WEBHOOK_URL=${{ secrets.MATTERMOST_WEBHOOK_URL }}" >> $GITHUB_ENV
           echo "APP_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
           echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "AUTHOR_NAME=${{ github.actor }}" >> $GITHUB_ENV
@@ -34,11 +30,9 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
-
       # - name: Run tests
       #   run: php artisan test
-
-
+      
       - name: Deploy to Digital Ocean Master
         if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
@@ -64,10 +58,7 @@ jobs:
              php artisan config:clear
              php artisan cache:clear
              echo "Deployment finished!"
-
-
-
-
+             
       - name: Deploy to Digital Ocean Development
         if: github.ref == 'refs/heads/development'
         uses: appleboy/ssh-action@master
