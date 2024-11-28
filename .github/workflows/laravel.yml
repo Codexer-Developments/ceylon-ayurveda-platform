@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
           script: |
-            cd /var/www/merchant-panel
+            cd /var/www/ceylon-ayurveda-platform
             echo "Deployment started ..."
             (php artisan down) || true
             git pull origin main
