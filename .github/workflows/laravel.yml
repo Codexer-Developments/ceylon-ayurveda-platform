@@ -40,9 +40,9 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DIGITAL_OCEAN_HOST }}
-          username: ${{ secrets.DIGITAL_OCEAN_USERNAME }}
-          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
+          host: ${{ secrets.DIGITAL_OCEAN_HOST_DEV }}
+          username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
           script: |
             cd /var/www/merchant-panel
             echo "Deployment started ..."
@@ -56,46 +56,6 @@ jobs:
             php artisan config:clear
             php artisan cache:clear
             echo "Deployment finished!"
-
-      - name: Deploy to Digital Ocean Development
-        if: github.ref == 'refs/heads/development'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DIGITAL_OCEAN_HOST_DEV }}
-          username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
-          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
-          script: |
-            cd /var/www/merchant-panel-dev
-            echo "Deployment started ..."
-            (php artisan down) || true
-            git pull origin development
-            git pull
-            composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
-            php artisan clear-compiled
-            php artisan optimize
-            php artisan up
-            php artisan config:clear
-            php artisan cache:clear
-
-      - name: Deploy to Digital Ocean Staging
-        if: github.ref == 'refs/heads/staging'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DIGITAL_OCEAN_HOST_DEV }}
-          username: ${{ secrets.DIGITAL_OCEAN_USERNAME_DEV }}
-          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_DEV }}
-          script: |
-            cd /var/www/merchant-panel-staging
-            echo "Deployment started ..."
-            (php artisan down) || true
-            git pull origin staging
-            git pull
-            composer install --no-ansi --no-interaction --no-dev --no-progress --prefer-dist
-            php artisan clear-compiled
-            php artisan optimize
-            php artisan up
-            php artisan config:clear
-            php artisan cache:clear
 
       - name: Switch Load Balancer
         run: |
