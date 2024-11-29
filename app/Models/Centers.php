@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Centers extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'address',
+        'phone',
+        'email',
+        'website',
+        'description',
+        'image',
+        'latitude',
+        'longitude',
+        'status'
+    ];
 }

@@ -10,8 +10,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
 
 class CentersResource extends Resource
 {
@@ -23,9 +25,41 @@ class CentersResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Name')
-                    ->required(),
+                TextInput::make('name')
+                    ->label('Center Name')
+                    ->required()
+                    ->maxLength(255),
+
+                Textarea::make('address')
+                    ->label('Address'),
+
+                TextInput::make('phone')
+                    ->label('Phone'),
+
+                TextInput::make('email')
+                    ->label('Email')
+                    ->email(),
+
+                TextInput::make('website')
+                    ->label('Website')
+                    ->url(),
+
+                Textarea::make('description')
+                    ->label('Description'),
+
+                FileUpload::make('image')
+                    ->label('Image'),
+
+                TextInput::make('latitude')
+                    ->label('Latitude'),
+
+                TextInput::make('longitude')
+                    ->label('Longitude'),
+
+                Toggle::make('status')
+                    ->label('Active')
+                    ->default(true),
+
             ]);
     }
 
@@ -33,7 +67,13 @@ class CentersResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('email')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->searchable(),
             ])
             ->filters([
                 //
