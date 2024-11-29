@@ -47,14 +47,7 @@ class CentersResource extends Resource
                 Textarea::make('description')
                     ->label('Description'),
 
-                FileUpload::make('image')
-                    ->label('Image'),
 
-                TextInput::make('latitude')
-                    ->label('Latitude'),
-
-                TextInput::make('longitude')
-                    ->label('Longitude'),
 
                 Toggle::make('status')
                     ->label('Active')
