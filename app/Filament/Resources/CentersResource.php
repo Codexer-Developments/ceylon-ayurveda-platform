@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CentersResource\Pages;
 use App\Filament\Resources\CentersResource\RelationManagers;
 use App\Models\Centers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -19,7 +20,7 @@ class CentersResource extends Resource
 {
     protected static ?string $model = Centers::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -54,7 +55,10 @@ class CentersResource extends Resource
                 Textarea::make('description')
                     ->label('Description'),
 
-
+                Forms\Components\Select::make('role')
+                    ->label('Shop Owner')
+                    ->options(User::role('Shop Owner')->get()->pluck('name', 'name'))
+                    ->required(),
 
                 Toggle::make('status')
                     ->label('Active')
