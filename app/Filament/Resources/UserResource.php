@@ -2,22 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CentersResource\Pages;
-use App\Filament\Resources\CentersResource\RelationManagers;
-use App\Models\Centers;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Toggle;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CentersResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Centers::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -32,34 +30,24 @@ class CentersResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Center Name')
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
                     ->required()
                     ->maxLength(255),
-
-                Textarea::make('address')
-                    ->label('Address'),
-
-                TextInput::make('phone')
-                    ->label('Phone'),
-
-                TextInput::make('email')
+                Forms\Components\TextInput::make('email')
                     ->label('Email')
-                    ->email(),
-
-                TextInput::make('website')
-                    ->label('Website')
-                    ->url(),
-
-                Textarea::make('description')
-                    ->label('Description'),
-
-
-
-                Toggle::make('status')
-                    ->label('Active')
-                    ->default(true),
-
+                    ->email()
+                    ->required()
+                    ->unique('users', 'email')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('password')
+                    ->label('Password')
+                    ->password()
+                    ->required(),
+                Forms\Components\Select::make('role')
+                    ->label('Role')
+                    ->options(\Spatie\Permission\Models\Role::all()->pluck('name', 'name'))
+                    ->required(),
             ]);
     }
 
@@ -68,12 +56,12 @@ class CentersResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+
             ])
             ->filters([
                 //
@@ -88,6 +76,9 @@ class CentersResource extends Resource
             ]);
     }
 
+
+
+
     public static function getRelations(): array
     {
         return [
@@ -98,11 +89,9 @@ class CentersResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCenters::route('/'),
-            'create' => Pages\CreateCenters::route('/create'),
-            'edit' => Pages\EditCenters::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
-
-
 }
