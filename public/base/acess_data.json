@@ -1,0 +1,34 @@
+{
+    "admin": {
+        "access": [
+            "UserResource",
+            "CentersResource",
+            "ProductsResource",
+            "TreatmentsResource",
+            "AppointmentsResource",
+            "ReportsResource",
+            "SettingsResource"
+        ]
+    },
+    "user": {
+        "access": [
+            "AppointmentsResource",
+            "ReportsResource"
+        ]
+    },
+    "manager": {
+        "access": [
+            "AppointmentsResource",
+            "ProductManagementResource",
+            "TreatmentManagementResource",
+            "ReportsResource"
+        ]
+    },
+    "pharmacist": {
+        "access": [
+            "AppointmentsResource",
+            "Product-managementResource",
+            "ReportsResource"
+        ]
+    }
+}

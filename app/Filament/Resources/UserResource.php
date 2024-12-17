@@ -40,6 +40,7 @@ class UserResource extends Resource
                         'staff' => 'Staff',
                         'doctor' => 'Doctor',
                         'patient' => 'Patient',
+                        'manager' => 'Manager',
                         'pharmacist' => 'Pharmacist'
                     ])
                     ->required(),
