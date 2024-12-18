@@ -4,6 +4,7 @@
             "UserResource",
             "CentersResource",
             "ProductsResource",
+            "ProductCategoryResource",
             "TreatmentsResource",
             "AppointmentsResource",
             "ReportsResource",
