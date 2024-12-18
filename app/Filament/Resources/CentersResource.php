@@ -14,6 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class CentersResource extends Resource
 {
@@ -49,9 +50,6 @@ class CentersResource extends Resource
                     ->label('Email')
                     ->email()
                     ->nullable(),
-                Forms\Components\TextInput::make('slug')
-                    ->label('Slug')
-                    ->required(),
                 Forms\Components\Toggle::make('status')
                     ->label('Active')
                     ->default(true),
@@ -99,4 +97,6 @@ class CentersResource extends Resource
             'edit' => Pages\EditCenters::route('/{record}/edit'),
         ];
     }
+
+
 }

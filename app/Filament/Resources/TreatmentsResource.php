@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TreatmentsResource\Pages;
 use App\Filament\Resources\TreatmentsResource\RelationManagers;
 use App\Models\Treatments;
+use App\ResourceAccessTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TreatmentsResource extends Resource
 {
+    use ResourceAccessTrait;
+
     protected static ?string $model = Treatments::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
