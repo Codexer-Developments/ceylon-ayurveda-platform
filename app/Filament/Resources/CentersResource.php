@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CentersResource\Pages;
 use App\Filament\Resources\CentersResource\RelationManagers;
 use App\Models\Centers;
+use App\Models\User;
 use App\ResourceAccessTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,9 +28,37 @@ class CentersResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $userDetails = User::where('role', 'manager')->pluck('name', 'id')->toArray();
+
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('center_name')
+                    ->label('Center Name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->label('Description')
+                    ->nullable(),
+                Forms\Components\Textarea::make('address')
+                    ->label('Address')
+                    ->nullable(),
+                Forms\Components\TextInput::make('phone')
+                    ->label('Phone')
+                    ->nullable(),
+                Forms\Components\TextInput::make('email')
+                    ->label('Email')
+                    ->email()
+                    ->nullable(),
+                Forms\Components\TextInput::make('slug')
+                    ->label('Slug')
+                    ->required(),
+                Forms\Components\Toggle::make('status')
+                    ->label('Active')
+                    ->default(true),
+                Forms\Components\Select::make('owner_id')
+                    ->label('Owner')
+                    ->options($userDetails)
+                    ->required(),
             ]);
     }
 
@@ -37,7 +66,12 @@ class CentersResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('center_name')->label('Center Name')->searchable(),
+                Tables\Columns\TextColumn::make('phone')->label('Phone')->searchable(),
+                Tables\Columns\TextColumn::make('email')->label('Email')->searchable(),
+                Tables\Columns\BooleanColumn::make('status')->label('Active'),
+                Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
             ->filters([
                 //
@@ -46,9 +80,7 @@ class CentersResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('slug');
-            $table->string('status')->default('active');
+            $table->boolean('status');
+            $table->string('owner_id');
             $table->timestamps();
         });
     }
