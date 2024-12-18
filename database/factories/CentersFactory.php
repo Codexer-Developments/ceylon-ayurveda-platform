@@ -17,7 +17,14 @@ class CentersFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'center_name' => $this->faker->name,
+            'description' => $this->faker->text,
+            'address' => $this->faker->address,
+            'phone' => $this->faker->phoneNumber,
+            'email' => $this->faker->unique()->safeEmail,
+            'status' => $this->faker->boolean,
+            'owner_id' => \App\Models\User::factory()->create()->id,
+            'slug' => $this->faker->slug,
         ];
     }
 }

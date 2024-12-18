@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Centers;
 use App\Models\ProductCategory;
 use App\Models\Products;
 use App\Models\User;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
          User::factory(10)->create();
          ProductCategory::factory(10)->create();
          Products::factory(10)->create();
+         Centers::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Admin User',
