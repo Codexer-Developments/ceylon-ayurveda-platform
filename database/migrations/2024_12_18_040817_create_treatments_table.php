@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('treatment_name');
             $table->text('description')->nullable();
             $table->boolean('status')->default(1);
-
             $table->timestamps();
         });
     }

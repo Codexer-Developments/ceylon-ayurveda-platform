@@ -9,4 +9,9 @@ class Treatments extends Model
 {
     /** @use HasFactory<\Database\Factories\TreatmentsFactory> */
     use HasFactory;
+    protected $fillable = [
+        'treatment_name',
+        'description',
+        'status',
+    ];
 }
