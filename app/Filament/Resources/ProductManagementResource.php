@@ -7,6 +7,7 @@ use App\Filament\Resources\ProductManagementResource\RelationManagers;
 use App\Models\Centers;
 use App\Models\ProductManagement;
 use App\Models\Products;
+use App\Models\User;
 use App\ResourceAccessTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,9 +28,13 @@ class ProductManagementResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $getCenterDetails = Centers::where('status', 1)
-            ->where('owner_id', auth()->user()->id)
+        $getCenterDetails = Centers::where('owner_id', auth()->user()->id)
             ->pluck('center_name', 'id')->toArray();
+
+        $userDetails  = [
+            auth()->user()->id => auth()->user()->name
+        ];
+
 
         $centerId = $getCenterDetails->id ?? null;
 
@@ -42,10 +47,23 @@ class ProductManagementResource extends Resource
                     ->label('Product Name')
                     ->options($productItem)
                     ->required(),
+                Forms\Components\Select::make('user_id')
+                    ->label('User ID')
+                    ->default(auth()->user()->id)
+                    ->options($userDetails)->required(),
                 Forms\Components\Select::make('center_id')
                     ->label('Center')
                     ->options($getCenterDetails)
                     ->required(),
+                Forms\Components\TextInput::make('price')
+                    ->label('Price')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('quantity')
+                    ->label('Quantity')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\Toggle::make('status')
             ]);
     }
 
@@ -53,7 +71,24 @@ class ProductManagementResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('center_id')
+                    ->label('Center')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('product.name') // Fetch product name via the relationship
+                    ->label('Product Name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('quantity')
+                    ->label('Quantity')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('price')
+                    ->label('Price')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\BooleanColumn::make('status')
+                    ->label('Active'),
             ])
             ->filters([
                 //
