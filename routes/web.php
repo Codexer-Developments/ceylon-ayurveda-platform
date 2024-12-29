@@ -16,3 +16,4 @@ Route::get('api/products/{centers}',[PosController::class, 'getProducts'])->name
 
 Route::get('api/patients',[PosController::class, 'getPatients'])->name('patient.get');
 
+

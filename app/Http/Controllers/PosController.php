@@ -55,4 +55,46 @@ class PosController extends Controller
 
         return response()->json($products->get()->toArray(), 200);
     }
+
+    public function addPatients(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required | unique:patients,address',
+            'phone_number' => 'required | unique:patients,phone_number',
+            'email' => 'required | unique:patients,email',
+            'tex_id' => 'required',
+            'patient_insurance_id' => 'required',
+            'patient_insurance_name' => 'required',
+            'insurance_group' => 'required',
+            'patient_insurance_type' => 'required',
+            'patient_blood_group' => 'required',
+            'patient_dob' => 'required',
+        ]);
+
+        $patient = Patients::create([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'tex_id' => $request->tex_id,
+            'insurance_id' => $request->patient_insurance_id,
+            'insurance_name' => $request->patient_insurance_name,
+            'insurance_group' => $request->insurance_group,
+            'insurance_type' => $request->patient_insurance_type,
+            'blood_group' => $request->patient_blood_group,
+            'dob' => $request->patient_dob,
+        ]);
+
+        $return = [
+            'message' => 'Patient added successfully',
+            'data' => $patient
+        ];
+
+        return response()->json($return, 201);
+    }
 }

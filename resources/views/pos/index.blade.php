@@ -197,6 +197,9 @@
                         <div class="row" style="margin-top: 10px">
                             <div class="col-md-12">
                                 <ol id="patientList" class="list-group list-group">
+                                    <div style="text-align:center;color: gray; padding-top: 60px;padding-bottom: 60px;">
+                                        <h3>Search Patients</h3>
+                                    </div>
                                     <!-- Patient results will appear here -->
                                 </ol>
 
@@ -244,7 +247,7 @@
                                 <div class="row" style="margin-top: 30px">
                                     <div class="col-md-4">
                                         <label>Tax ID</label>
-                                        <input type="text" class="form-control" id="patient_tax_id" name="patient_tax_id">
+                                        <input type="text" class="form-control" id="patient_tax_id" name="tex_id">
                                     </div>
                                     <div class="col-md-4">
                                         <label>Blood Group</label>
@@ -259,7 +262,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label>Date of birth</label>
-                                        <input type="text" class="form-control" id="patient_dob" name="patient_dob">
+                                        <input type="date" class="form-control" id="patient_dob" name="patient_dob">
                                     </div>
                                 </div>
                             </div>
@@ -323,7 +326,7 @@
             let formData = $(this).serialize(); // Serialize form data
 
             $.ajax({
-                url: '/submit-patient-data', // Replace with your server endpoint
+                url: '{{url('api/patients')}}', // Replace with your server endpoint
                 method: 'POST',
                 data: formData,
                 success: function (response) {
@@ -331,6 +334,10 @@
                     $('#responseMessage').html(
                         `<div class="alert alert-success">${response.message}</div>`
                     );
+
+                    patientSelect(response.data.id, response.data.first_name + ' ' + response.data.middle_name + ' ' + response.data.last_name,
+                        response.data.address, response.data.email, response.data.phone_number);
+                    $('#exampleModal').modal('toggle');
                 },
                 error: function (xhr) {
                     // Handle error
