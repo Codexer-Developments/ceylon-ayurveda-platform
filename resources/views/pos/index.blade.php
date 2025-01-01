@@ -4,181 +4,39 @@
 @section('content')
 
 
-<form method="post" action="{{url('post-order')}}">
-    {{csrf_field()}}
-    <div class="container mt-5">
+    <div class="container">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 10px">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-product-sell-pos-tab" data-bs-toggle="pill" data-bs-target="#pills-product-sell-pos" type="button" role="tab" aria-controls="pills-product-sell-pos" aria-selected="true">Product Selling</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-treatment-checkout-tab" data-bs-toggle="pill" data-bs-target="#pills-treatment-checkout" type="button" role="tab" aria-controls="pills-treatment-checkout" aria-selected="false">Doctors Appointment Checkout</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-doctor-appointment-tab" data-bs-toggle="pill" data-bs-target="#pills-doctor-appointment" type="button" role="tab" aria-controls="pills-doctor-appointment" aria-selected="false">Doctor Appointment</button>
+            </li>
+        </ul>
+    </div>
 
-        <div class="row">
-            <!-- Product List -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="" style="padding: 20px;background: lightblue;margin-bottom: 30px;">
-                        <div class="form-group row">
-                            <input type="text" id="search-product-input" class="form-control" placeholder="Search products..." onkeyup="searchProducts()"/>
-                        </div>
-                    </div>
-                    <div class="" style="padding: 20px;">
-                        <div class="row" id="product-container">
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-product-sell-pos" role="tabpanel" aria-labelledby="pills-product-sell-pos-tab">
+            @include('pos.pos_pages.product_sell_pos')
+        </div>
+        <div class="tab-pane fade" id="pills-treatment-checkout" role="tabpanel" aria-labelledby="pills-treatment-checkout-tab">
+            
+        </div>
+        <div class="tab-pane fade" id="pills-doctor-appointment" role="tabpanel" aria-labelledby="pills-doctor-appointment-tab">
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cart Section -->
-            <div class="col-md-8">
-                <h4>Patient Details </h4>
-                <div style="display: flex">
-                    <input type="text" id="search-customer-input" class="form-control mb-3" placeholder="Search Address, Name, Etc" onkeyup="searchCustomer()"/>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary" style="height: 40px;margin-left: 10px;">+</a>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12" style="background: #eaeaeadb;padding-bottom: 20px;border-radius: 10px;border-style: dashed;border-width: 1px;border-color: #dddddd;">
-                        <div class="row">
-                            <div class="col-md-6" style="display: none">
-                                <div class="form-group" style="margin-top: 20px">
-                                    <label for="searchInput">Patient Address</label>
-                                    <input type="text" id="patient_address" class="form-control" placeholder="Search Patient" readonly required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group-sm" style="margin-top: 20px">
-                                    <label for="searchInput">Patient Name</label>
-                                    <input type="text" id="patient_name" class="form-control" placeholder="Patient Name" readonly>
-                                    <input type="hidden" id="patient_id" class="form-control" name="patient_id" placeholder="Patient Name" readonly>
-                                    <input type="hidden" id="center_id_field" class="form-control" name="center_id_field" value="{{$center->id}}" placeholder="Patient Name" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group-sm" style="margin-top: 20px">
-                                    <label for="searchInput">Patient Email</label>
-                                    <input type="text" id="patient_email" class="form-control" placeholder="Patient Email" readonly required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group" style="margin-top: 20px">
-                                    <label for="searchInput">Phone Number</label>
-                                    <input type="text" id="patient_phone_number" class="form-control" placeholder="Search Patient" readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-                <div id="customer-details" class="mb-3">
-
-                </div>
-
-                <h4>Cart</h4>
-                <ul class="list-group mb-3">
-
-                    <table class="table">
-                        <caption>List of users</caption>
-                        <thead>
-                        <tr>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Qty</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody id="cart-list">
-
-                        </tbody>
-                    </table>
-
-
-
-                    <!-- Dynamic Cart Items -->
-                </ul>
-                <div class="d-flex justify-content-between align-items-center total-section">
-                    <span>Total:</span>
-                    <span id="cart-total">$0.00</span>
-                    <input type="hidden" name="cart_total" id="cart-total-field">
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                    <label for="discount">Discount (%):</label>
-                    <input name="discount"
-                        type="number"
-                        id="discount-input"
-                        class="form-control w-50"
-                        min="0"
-                        max="100"
-                        value="0"
-                        onchange="applyDiscount()"
-                    />
-                </div>
-                <button class="btn btn-primary w-100 mt-3" onclick="checkout()">Checkout</button>
-            </div>
         </div>
     </div>
 
-</form>
+
+
+
 
 
 @include('pos.dialog.add_customer')
 
-<script>
-    function patientSelect(patientId, patientName, patientAddress, patientEmail, patientPhoneNumber) {
-        const audio = new Audio('{{url('sound/blip.mp3')}}'); // Replace with the actual path to your MP3 file
-        audio.play();
-
-        $('#patient_id').val(patientId);
-        $('#patient_name').val(patientName);
-        $('#patient_address').val(patientAddress);
-        $('#patient_email').val(patientEmail);
-        $('#patient_phone_number').val(patientPhoneNumber);
-
-        $('#exampleModal').modal('hide');
-    }
-
-    $(document).ready(function () {
-        $('#searchInput').on('input', function () {
-            const query = $(this).val();
-
-            // Perform AJAX request if query has at least 3 characters
-            if (query.length >= 3) {
-                $.ajax({
-                    url: '{{ url("api/patients") }}',
-                    type: 'GET',
-                    data: { query },
-                    success: function (data) {
-                        let patientList = '';
-
-                        if (data.length > 0) {
-                            data.forEach(function (patient) {
-                                patientList += `<a href="#" onclick="patientSelect('${patient.id}','${patient.first_name} ${patient.middle_name} ${patient.last_name}','${patient.id}', '${patient.email}','${patient.phone_number}')" class="list-group-item d-flex justify-content-between align-items-start list-group-item-action">
-                                                    <div class="ms-2 me-auto">
-                                                      <div class="fw-bold">${patient.first_name} ${patient.middle_name} ${patient.last_name}</div>
-                                                        ${patient.address}
-                                                    </div>
-                                                    <span class="badge bg-primary rounded-pill">${patient.email}</span>
-                                                  </a>`;
-                            });
-                        } else {
-                            patientList = '<li class="list-group-item">No results found</li>';
-                        }
-
-                        $('#patientList').html(patientList);
-                    },
-                    error: function () {
-                        console.error('Error fetching patients.');
-                    }
-                });
-            } else {
-                $('#patientList').html('');
-            }
-        });
-    });
-</script>
 
 
 

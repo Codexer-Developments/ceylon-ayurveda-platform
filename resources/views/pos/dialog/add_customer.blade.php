@@ -178,3 +178,58 @@
         });
     });
 </script>
+
+
+<script>
+    function patientSelect(patientId, patientName, patientAddress, patientEmail, patientPhoneNumber) {
+        const audio = new Audio('{{url('sound/blip.mp3')}}'); // Replace with the actual path to your MP3 file
+        audio.play();
+
+        $('#patient_id').val(patientId);
+        $('#patient_name').val(patientName);
+        $('#patient_address').val(patientAddress);
+        $('#patient_email').val(patientEmail);
+        $('#patient_phone_number').val(patientPhoneNumber);
+
+        $('#exampleModal').modal('hide');
+    }
+
+    $(document).ready(function () {
+        $('#searchInput').on('input', function () {
+            const query = $(this).val();
+
+            // Perform AJAX request if query has at least 3 characters
+            if (query.length >= 3) {
+                $.ajax({
+                    url: '{{ url("api/patients") }}',
+                    type: 'GET',
+                    data: { query },
+                    success: function (data) {
+                        let patientList = '';
+
+                        if (data.length > 0) {
+                            data.forEach(function (patient) {
+                                patientList += `<a href="#" onclick="patientSelect('${patient.id}','${patient.first_name} ${patient.middle_name} ${patient.last_name}','${patient.id}', '${patient.email}','${patient.phone_number}')" class="list-group-item d-flex justify-content-between align-items-start list-group-item-action">
+                                                    <div class="ms-2 me-auto">
+                                                      <div class="fw-bold">${patient.first_name} ${patient.middle_name} ${patient.last_name}</div>
+                                                        ${patient.address}
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">${patient.email}</span>
+                                                  </a>`;
+                            });
+                        } else {
+                            patientList = '<li class="list-group-item">No results found</li>';
+                        }
+
+                        $('#patientList').html(patientList);
+                    },
+                    error: function () {
+                        console.error('Error fetching patients.');
+                    }
+                });
+            } else {
+                $('#patientList').html('');
+            }
+        });
+    });
+</script>
