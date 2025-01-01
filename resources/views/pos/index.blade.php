@@ -36,15 +36,7 @@
                 <div class="row">
                     <div class="col-md-12" style="background: #eaeaeadb;padding-bottom: 20px;border-radius: 10px;border-style: dashed;border-width: 1px;border-color: #dddddd;">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-sm" style="margin-top: 20px">
-                                    <label for="searchInput">Patient Name</label>
-                                    <input type="text" id="patient_name" class="form-control" placeholder="Patient Name" readonly>
-                                    <input type="hidden" id="patient_id" class="form-control" name="patient_id" placeholder="Patient Name" readonly>
-                                    <input type="hidden" id="center_id_field" class="form-control" name="center_id_field" value="{{$center->id}}" placeholder="Patient Name" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="display: none">
                                 <div class="form-group" style="margin-top: 20px">
                                     <label for="searchInput">Patient Address</label>
                                     <input type="text" id="patient_address" class="form-control" placeholder="Search Patient" readonly required>
@@ -53,13 +45,21 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group-sm" style="margin-top: 20px">
+                                    <label for="searchInput">Patient Name</label>
+                                    <input type="text" id="patient_name" class="form-control" placeholder="Patient Name" readonly>
+                                    <input type="hidden" id="patient_id" class="form-control" name="patient_id" placeholder="Patient Name" readonly>
+                                    <input type="hidden" id="center_id_field" class="form-control" name="center_id_field" value="{{$center->id}}" placeholder="Patient Name" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group-sm" style="margin-top: 20px">
                                     <label for="searchInput">Patient Email</label>
                                     <input type="text" id="patient_email" class="form-control" placeholder="Patient Email" readonly required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group" style="margin-top: 20px">
                                     <label for="searchInput">Phone Number</label>
                                     <input type="text" id="patient_phone_number" class="form-control" placeholder="Search Patient" readonly>
@@ -136,6 +136,8 @@
         $('#patient_address').val(patientAddress);
         $('#patient_email').val(patientEmail);
         $('#patient_phone_number').val(patientPhoneNumber);
+
+        $('#exampleModal').modal('hide');
     }
 
     $(document).ready(function () {
@@ -153,7 +155,7 @@
 
                         if (data.length > 0) {
                             data.forEach(function (patient) {
-                                patientList += `<a href="#" onclick="patientSelect('${patient.id}','${patient.first_name} ${patient.middle_name} ${patient.last_name}','${patient.address}', '${patient.email}','${patient.phone_number}')"  data-bs-dismiss="modal" class="list-group-item d-flex justify-content-between align-items-start list-group-item-action">
+                                patientList += `<a href="#" onclick="patientSelect('${patient.id}','${patient.first_name} ${patient.middle_name} ${patient.last_name}','${patient.id}', '${patient.email}','${patient.phone_number}')" class="list-group-item d-flex justify-content-between align-items-start list-group-item-action">
                                                     <div class="ms-2 me-auto">
                                                       <div class="fw-bold">${patient.first_name} ${patient.middle_name} ${patient.last_name}</div>
                                                         ${patient.address}
