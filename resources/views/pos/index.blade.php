@@ -23,10 +23,10 @@
             @include('pos.pos_pages.product_sell_pos')
         </div>
         <div class="tab-pane fade" id="pills-treatment-checkout" role="tabpanel" aria-labelledby="pills-treatment-checkout-tab">
-            
+            @include('pos.pos_pages.doctor_appoiment_checkout')
         </div>
         <div class="tab-pane fade" id="pills-doctor-appointment" role="tabpanel" aria-labelledby="pills-doctor-appointment-tab">
-
+            @include('pos.pos_pages.doctor_appoiment')
         </div>
     </div>
 
@@ -38,7 +38,33 @@
 @include('pos.dialog.add_customer')
 
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve stored tab ID from localStorage
+            const activeTabId = localStorage.getItem("activeTab");
 
+            if (activeTabId) {
+                // Activate the stored tab
+                const activeTab = document.querySelector(`#${activeTabId}`);
+                const tabContent = document.querySelector(activeTab.dataset.bsTarget);
+
+                // Remove active classes from all tabs and tab panes
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
+
+                // Add active classes to the stored tab and its content
+                activeTab.classList.add('active');
+                tabContent.classList.add('show', 'active');
+            }
+
+            // Store the active tab ID when a tab is clicked
+            document.querySelectorAll('.nav-link').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    localStorage.setItem("activeTab", this.id);
+                });
+            });
+        });
+    </script>
 
 <script>
     let products = [];
