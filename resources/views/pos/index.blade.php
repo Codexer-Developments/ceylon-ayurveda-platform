@@ -219,7 +219,7 @@
             const productCard = document.createElement('div');
             productCard.className = 'col-md-12';
             productCard.innerHTML = `
-                    <div  class="card product-card" style="margin-bottom: 10px;height: 123px;" onclick="addToCart('${product.name}', ${product.price})">
+                    <div  class="card product-card" style="margin-bottom: 10px;height: 123px;" onclick="addToCart('${product.id}','${product.name}', ${product.price})">
                         <div class="card-body">
                             <h5>${product.name}</h5>
                             <p style="font-size: 12px;">${product.description}</p>
@@ -233,7 +233,7 @@
     }
 
     // Add product to cart
-    function addToCart(productName, productPrice) {
+    function addToCart(productId,productName, productPrice) {
         const audio = new Audio('{{url('sound/beep.mp3')}}'); // Replace with the actual path to your MP3 file
         audio.play();
 
@@ -242,7 +242,7 @@
         if (existingProduct) {
             existingProduct.qty++;
         } else {
-            cart.push({  name: productName, price: productPrice, qty: 1 });
+            cart.push({  id:productId, name: productName, price: productPrice, qty: 1 });
         }
 
         updateCart();
@@ -259,9 +259,10 @@
             const itemTotal = item.price * item.qty;
             total += itemTotal;
 
+            console.log(item);
             const cartItem = document.createElement('tr');
             cartItem.className = '';
-            cartItem.innerHTML = `<input type="hidden" name="product_id[]" value="${item.name}">
+            cartItem.innerHTML = `<input type="hidden" name="product_id[]" value="${item.id}">
                                     <input type="hidden" name="product_qty[]" value="${item.qty}">
                                     <input type="hidden" name="product_total[]" value="${itemTotal.toFixed(2)}">
                             <td>${item.name}</td>

@@ -7,6 +7,7 @@ use App\Models\Patients;
 use App\Models\ProductManagement;
 use App\Models\Products;
 use App\Models\SalesOrder;
+use App\Models\SalesOrderItem;
 use App\Services\PosAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,16 @@ class PosController extends Controller
         return view('pos.index',[
             'center' => $centers,
         ]);
+    }
+
+    public function invoicePos(Centers $centers,SalesOrder $salesorder, Request $request)
+    {
+
+        return view('pos.invoice',[
+            'center' => $centers,
+            'sales_order' => $salesorder,
+        ]);
+
     }
 
     public function getPatients(Request $request)
@@ -102,7 +113,7 @@ class PosController extends Controller
 
     public function postOrder(Request $request)
     {
-        $orderDetails = SalesOrder::create([
+        $preparationData = [
             'center_id' => $request->center_id_field,
             'patient_id' => $request->patient_id,
             'total_amount' => $request->cart_total,
@@ -113,8 +124,37 @@ class PosController extends Controller
             'order_date' => $request->order_date,
             'order_time' => $request->order_time,
             'user_id' => auth()->user()->id,
-        ]);
-        dd($orderDetails);
+        ];
+        $orderDetails = SalesOrder::create($preparationData);
+        $itemsList = [];
+        foreach ($request->product_id as $key => $product) {
+            $productDetails = ProductManagement::where('product_id', $product)->first();
+
+           $productItem = [
+                'sales_order_id' => $orderDetails->id,
+                'product_id' => $product,
+                'center_id' => $request->center_id_field,
+                'quantity' => $request->product_qty[$key],
+                'price' => $productDetails->price,
+                'payment_method' => 'cash',
+                'payment_reference' => 'pos',
+                'payment_date' => 'pos',
+                'total_amount' => $request->product_total[$key],
+            ];
+            SalesOrderItem::create($productItem);
+            $productItem['product_name'] = $productDetails->product->name;
+            $itemsList[] = $productItem;
+
+        }
+        $preparationData['items'] = $itemsList;
+
+        SalesOrder::where('id', $orderDetails->id)
+            ->update(['order_note' => json_encode($preparationData)]);
+
+        return redirect(url('invoice',[
+            'center_id' =>  $request->center_id_field,
+            'salesorder' => $orderDetails->id
+        ]));
     }
 
     public function posPortal()

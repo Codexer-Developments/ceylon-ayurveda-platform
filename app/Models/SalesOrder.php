@@ -22,4 +22,9 @@ class SalesOrder extends Model
         'updated_by',
         'user_id'
     ];
+
+    public function items()
+    {
+        return $this->hasMany(SalesOrderItem::class);
+    }
 }

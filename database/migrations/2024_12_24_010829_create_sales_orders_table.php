@@ -32,6 +32,7 @@ return new class extends Migration
             $table->float('paid_amount')->default(0);
             $table->float('due_amount')->default(0);
             $table->float('return_amount')->default(0);
+            $table->json('order_note')->nullable();
             $table->timestamps();
         });
     }

@@ -10,6 +10,8 @@ Route::get('/', function () {
 Route::get('/test', [TestingController::class, 'index'])->name('test');
 
 Route::get('/pos/{centers}',[PosController::class, 'pos'])->name('pos');
+Route::get('invoice/{centers}/{salesorder}',[PosController::class, 'invoicePos'])->name('patient.invoice');
+
 
 Route::get('api/products/{centers}',[PosController::class, 'getProducts'])->name('product.get');
 
@@ -18,5 +20,8 @@ Route::get('api/patients',[PosController::class, 'getPatients'])->name('patient.
 Route::post('post-order',[PosController::class, 'postOrder'])->name('patient.postOder');
 
 Route::get('pos-portal',[PosController::class, 'posPortal'])->name('patient.posPortal');
+
+
+
 
 
