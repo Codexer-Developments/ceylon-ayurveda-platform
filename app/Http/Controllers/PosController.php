@@ -6,6 +6,8 @@ use App\Models\Centers;
 use App\Models\Patients;
 use App\Models\ProductManagement;
 use App\Models\Products;
+use App\Models\SalesOrder;
+use App\Services\PosAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class PosController extends Controller
@@ -96,5 +98,29 @@ class PosController extends Controller
         ];
 
         return response()->json($return, 201);
+    }
+
+    public function postOrder(Request $request)
+    {
+        $orderDetails = SalesOrder::create([
+            'center_id' => $request->center_id_field,
+            'patient_id' => $request->patient_id,
+            'total_amount' => $request->cart_total,
+            'discount' => $request->discount,
+            'payment_method' => 'cash',
+            'payment_status' => 'paid',
+            'order_status' => 'completed',
+            'order_date' => $request->order_date,
+            'order_time' => $request->order_time,
+            'user_id' => auth()->user()->id,
+        ]);
+        dd($orderDetails);
+    }
+
+    public function posPortal()
+    {
+        $posAccessService = new PosAccessService();
+        $posAccess = $posAccessService->posAccess(auth()->user()->id);
+        return view('pos.pos-portal',$posAccess);
     }
 }
