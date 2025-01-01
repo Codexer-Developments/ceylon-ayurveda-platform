@@ -41,15 +41,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-end align-items-center">
-                        @if(isset($center_details))
-                            @if($center_details->count() > 0)
-                                <select class="form-select" id="center-select" name="center-select">
-                                    @foreach($center_details as $centerItem)
-                                        <option value="{{$centerItem->id}}">{{$centerItem->center_name}}</option>
-                                    @endforeach
-                                </select>
-                            @endif
-                        @endif
+
 
                     </div>
                 </div>

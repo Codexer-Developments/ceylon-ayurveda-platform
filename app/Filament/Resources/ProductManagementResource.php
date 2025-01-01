@@ -46,7 +46,7 @@ class ProductManagementResource extends Resource
                 Forms\Components\Select::make('product_id')
                     ->label('Product Name')
                     ->options($productItem)
-                    ->required(),
+                    ->required()->unique(),
                 Forms\Components\Select::make('user_id')
                     ->label('User ID')
                     ->default(auth()->user()->id)

@@ -66,8 +66,6 @@ class CentersResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('center_name')->label('Center Name')->searchable(),
-                Tables\Columns\TextColumn::make('phone')->label('Phone')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('Email')->searchable(),
                 Tables\Columns\BooleanColumn::make('status')->label('Active'),
                 Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
