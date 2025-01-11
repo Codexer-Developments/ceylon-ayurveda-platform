@@ -20,6 +20,23 @@
 
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-product-sell-pos" role="tabpanel" aria-labelledby="pills-product-sell-pos-tab">
+
+            <div class="container">
+                @if ($errors->any())
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+
+                    @foreach ($errors->all() as $error)
+
+                            <div>{{$error}}</div>
+
+                    @endforeach
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                @endif
+            </div>
+
+
             @include('pos.pos_pages.product_sell_pos')
         </div>
         <div class="tab-pane fade" id="pills-treatment-checkout" role="tabpanel" aria-labelledby="pills-treatment-checkout-tab">
@@ -39,6 +56,17 @@
 
 
     <script>
+
+        // Remove an item from the cart
+        function removeFromCart(index) {
+            // Remove the item at the given index
+            cart.splice(index, 1);
+
+            // Update the cart display and recalculate totals
+            updateCart();
+        }
+
+
         document.addEventListener("DOMContentLoaded", function () {
             // Retrieve stored tab ID from localStorage
             const activeTabId = localStorage.getItem("activeTab");
@@ -153,7 +181,7 @@
                                     <input type="hidden" name="product_total[]" value="${itemTotal.toFixed(2)}">
                             <td>${item.name}</td>
                             <td>($${item.price.toFixed(2)})</td>
-                            <td><input type="number" class="form-control" value="${item.qty}" onchange="updateQty(${index}, this.value)"></td>
+                            <td><input type="number" class="form-control" onchange="updateQty(${index}, this.value)" value="${item.qty}" onchange="updateQty(${index}, this.value)"></td>
                             <td>$${itemTotal.toFixed(2)}</td>
                             <td><button class="btn btn-sm btn-danger" onclick="removeFromCart(${index})">Remove</button></td>
                 `;
@@ -172,6 +200,24 @@
         document.getElementById('cart-total-field').value = `${discountedTotal.toFixed(2)}`;
 
     }
+
+    function updateQty(index, newQty) {
+        // Parse the new quantity as an integer
+        const quantity = parseInt(newQty);
+
+        // Check if the quantity is valid
+        if (quantity > 0) {
+            // Update the quantity of the item at the given index
+            cart[index].qty = quantity;
+        } else {
+            // If the quantity is invalid (e.g., 0 or negative), reset it to 1
+            cart[index].qty = 1;
+        }
+
+        // Refresh the cart display and totals
+        updateCart();
+    }
+
 
     // Search customer via AJAX
     async function searchCustomer() {

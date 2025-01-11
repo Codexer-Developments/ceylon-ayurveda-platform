@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostOrderRequest;
 use App\Models\Centers;
 use App\Models\Patients;
 use App\Models\ProductManagement;
@@ -111,7 +112,7 @@ class PosController extends Controller
         return response()->json($return, 201);
     }
 
-    public function postOrder(Request $request)
+    public function postOrder(PostOrderRequest $request)
     {
         $preparationData = [
             'center_id' => $request->center_id_field,
