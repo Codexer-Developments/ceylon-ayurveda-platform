@@ -134,6 +134,9 @@ class SaleOrdersResource extends Resource
                 Filter::make('pending')
                     ->query(fn (Builder $query) => $query->where('status', 'pending'))
                     ->label('Pending Orders'),
+                Filter::make('complete')
+                    ->query(fn (Builder $query) => $query->where('status', 'complete'))
+                    ->label('Completed Orders'),
             ])
             ->actions([
                 Action::make('viewInvoice')
