@@ -14,23 +14,19 @@
                 <div class="col-sm-6">
                     <h5>From:</h5>
                     <p>
-                        <strong>Company Name</strong><br>
-                        Address Line 1<br>
-                        Address Line 2<br>
-                        City, State, ZIP<br>
-                        Phone: (123) 456-7890<br>
-                        Email: info@company.com
+                        <strong>{{$center->center_name}}</strong><br>
+                        {!! $center->address !!} <br>
+                        Phone: {{$center->phone}}<br>
+                        Email: {{$center->email}}
                     </p>
                 </div>
                 <div class="col-sm-6 text-end">
                     <h5>To:</h5>
                     <p>
-                        <strong>Client Name</strong><br>
-                        Address Line 1<br>
-                        Address Line 2<br>
-                        City, State, ZIP<br>
-                        Phone: (987) 654-3210<br>
-                        Email: client@example.com
+                        <strong>{{$patient->first_name}} {{$patient->middle_name}} {{$patient->last_name}}</strong><br>
+                        {!! $patient->address !!}<br>
+                        Phone: {{$patient->phone_number}}<br>
+                        Email: {{$patient->email}}
                     </p>
                 </div>
             </div>
@@ -38,11 +34,11 @@
             <div class="row mb-4">
                 <div class="col-sm-6">
                     <h6>Invoice Number:</h6>
-                    <p>#INV-001</p>
+                    <p>#INV-{{$salesOrder->id}}</p>
                 </div>
                 <div class="col-sm-6 text-end">
                     <h6>Date:</h6>
-                    <p>January 1, 2025</p>
+                    <p>{{$salesOrder->created_at}}</p>
                 </div>
             </div>
 
@@ -50,47 +46,36 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Description</th>
+                    <th>Product name</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Item 1</td>
-                    <td>2</td>
-                    <td>$50.00</td>
-                    <td>$100.00</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Item 2</td>
-                    <td>1</td>
-                    <td>$75.00</td>
-                    <td>$75.00</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Item 3</td>
-                    <td>3</td>
-                    <td>$20.00</td>
-                    <td>$60.00</td>
-                </tr>
+                @foreach($salesOrder->order_note['items'] as $productItems )
+                    <tr>
+                        <td>{{$productItems['product_id']}}</td>
+                        <td>{{$productItems['product_name']}}</td>
+                        <td>{{$productItems['quantity']}}</td>
+                        <td>GBP {{$productItems['price']}}</td>
+                        <td>GBP {{$productItems['total_amount']}}</td>
+                    </tr>
+                @endforeach
+
                 </tbody>
                 <tfoot>
                 <tr>
                     <td colspan="4" class="text-end"><strong>Subtotal</strong></td>
-                    <td>$235.00</td>
+                    <td>GBP {{$salesOrder->order_note['total_amount']}}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="text-end"><strong>Tax (10%)</strong></td>
-                    <td>$23.50</td>
+                    <td colspan="4" class="text-end"><strong>Discount</strong></td>
+                    <td>GBP {{$salesOrder->order_note['discount']}}</td>
                 </tr>
                 <tr>
                     <td colspan="4" class="text-end"><strong>Total</strong></td>
-                    <td>$258.50</td>
+                    <td>GBP {{$salesOrder->order_note['total_amount']}}</td>
                 </tr>
                 </tfoot>
             </table>

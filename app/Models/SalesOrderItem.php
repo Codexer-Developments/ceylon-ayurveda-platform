@@ -12,6 +12,8 @@ class SalesOrderItem extends Model
 
     protected $table = 'sales_order_items';
 
+
+
     protected $fillable = [
         'sales_order_id',
         'product_id',

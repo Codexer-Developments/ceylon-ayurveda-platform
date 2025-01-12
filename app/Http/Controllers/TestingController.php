@@ -12,7 +12,6 @@ class TestingController extends Controller
         $userAccessService = new UserAccessService();
         $userAccessDetails = $userAccessService->getAccessModel('admin');
         $userAccessDetailsStatus = $userAccessService->isAccessAllowed('admin', 'users');
-        dd($userAccessDetailsStatus);
         return "test";
     }
 }

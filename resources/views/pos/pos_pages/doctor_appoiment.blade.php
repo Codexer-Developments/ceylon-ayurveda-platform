@@ -20,8 +20,6 @@
         background-color: #e9ecef;
     }
 </style>
-</head>
-<body>
 <div class="container my-5">
     <h1 class="text-center mb-4">Appointment Calendar</h1>
 
@@ -57,7 +55,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const calendarElement = document.getElementById('calendar');
     const timeSlotsElement = document.getElementById('time-slots');

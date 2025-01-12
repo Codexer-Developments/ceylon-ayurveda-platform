@@ -17,11 +17,6 @@ class PostOrderRequest extends FormRequest
     {
         return [
             'patient_id' => ['required'],
-            'center_id' => ['required'],
-            'doctor_id' => ['required'],
-            'description' => ['required'],
-            'date' => ['required'],
-            'created_by' => ['required'],
         ];
     }
 }

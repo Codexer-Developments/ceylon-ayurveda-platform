@@ -23,10 +23,12 @@ class PosController extends Controller
 
     public function invoicePos(Centers $centers,SalesOrder $salesorder, Request $request)
     {
+        $patientDetails = Patients::where('id', $salesorder->patient_id)->first();
 
         return view('pos.invoice',[
             'center' => $centers,
-            'sales_order' => $salesorder,
+            'patient' => $patientDetails,
+            'salesOrder' => $salesorder,
         ]);
 
     }
@@ -126,6 +128,7 @@ class PosController extends Controller
             'order_time' => $request->order_time,
             'user_id' => auth()->user()->id,
         ];
+
         $orderDetails = SalesOrder::create($preparationData);
         $itemsList = [];
         foreach ($request->product_id as $key => $product) {
@@ -150,7 +153,7 @@ class PosController extends Controller
         $preparationData['items'] = $itemsList;
 
         SalesOrder::where('id', $orderDetails->id)
-            ->update(['order_note' => json_encode($preparationData)]);
+            ->update(['order_note' => $preparationData]);
 
         return redirect(url('invoice',[
             'center_id' =>  $request->center_id_field,

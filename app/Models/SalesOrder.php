@@ -10,6 +10,10 @@ class SalesOrder extends Model
     /** @use HasFactory<\Database\Factories\SalesOrderFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'order_note' => 'json'
+    ];
+
     protected $fillable = [
         'center_id',
         'patient_id',
@@ -26,5 +30,15 @@ class SalesOrder extends Model
     public function items()
     {
         return $this->hasMany(SalesOrderItem::class);
+    }
+
+    public function center()
+    {
+        return $this->belongsTo(Centers::class);
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patients::class);
     }
 }
