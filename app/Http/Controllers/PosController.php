@@ -12,6 +12,8 @@ use App\Models\SalesOrderItem;
 use App\Services\PosAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+
 class PosController extends Controller
 {
     public function pos(Centers $centers, Request $request)
@@ -166,5 +168,22 @@ class PosController extends Controller
         $posAccessService = new PosAccessService();
         $posAccess = $posAccessService->posAccess(auth()->user()->id);
         return view('pos.pos-portal',$posAccess);
+    }
+
+    public function productBarcodePrint(Products $product, $qty)
+    {
+
+        return view('products.product',[
+            'product' => $product,
+            'qty' => $qty
+        ]);
+    }
+
+    public function productBarcode(Request $request)
+    {
+        return redirect(url('product-barcode-print',[
+            'product' => $request->product_id,
+            'qty' => $request->barcode_quantity
+        ]));
     }
 }

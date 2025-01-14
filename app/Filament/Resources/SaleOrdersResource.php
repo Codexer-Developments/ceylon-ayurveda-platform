@@ -22,6 +22,11 @@ class SaleOrdersResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canCreate() : bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -120,7 +125,8 @@ class SaleOrdersResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+
+        return $table->query(SalesOrder::whereIn('center_id', getCenters(auth()->user())))
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('center.center_name')->label('Center'),
@@ -164,8 +170,6 @@ class SaleOrdersResource extends Resource
     {
         return [
             'index' => Pages\ListSaleOrders::route('/'),
-            'create' => Pages\CreateSaleOrders::route('/create'),
-            'edit' => Pages\EditSaleOrders::route('/{record}/edit'),
         ];
     }
 }

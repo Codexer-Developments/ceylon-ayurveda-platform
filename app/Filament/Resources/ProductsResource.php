@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\ProductManagementResource\Pages\BarcodeGenerate;
 use App\Filament\Resources\ProductsResource\Pages;
 use App\Filament\Resources\ProductsResource\RelationManagers;
 use App\Models\ProductCategory;
@@ -88,7 +89,7 @@ class ProductsResource extends Resource
         return [
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProducts::route('/create'),
-            'edit' => Pages\EditProducts::route('/{record}/edit'),
+            'edit' => Pages\EditProducts::route('/{record}/edit')
         ];
     }
 

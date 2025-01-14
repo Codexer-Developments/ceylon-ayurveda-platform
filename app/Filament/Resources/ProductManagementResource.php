@@ -7,16 +7,20 @@ use App\Filament\Resources\ProductManagementResource\RelationManagers;
 use App\Models\Centers;
 use App\Models\ProductManagement;
 use App\Models\Products;
+use App\Models\SalesOrder;
 use App\Models\User;
 use App\ResourceAccessTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
+use App\Rules\ProductManagementUniqueProductRule;
 
 class ProductManagementResource extends Resource
 {
@@ -37,7 +41,6 @@ class ProductManagementResource extends Resource
 
 
         $centerId = $getCenterDetails->id ?? null;
-
         $productItem = Products::where('status', 1)
             ->pluck('name', 'id')->toArray();
 
@@ -45,8 +48,7 @@ class ProductManagementResource extends Resource
             ->schema([
                 Forms\Components\Select::make('product_id')
                     ->label('Product Name')
-                    ->options($productItem)
-                    ->required()->unique(),
+                    ->options($productItem),
                 Forms\Components\Select::make('user_id')
                     ->label('User ID')
                     ->default(auth()->user()->id)
@@ -67,9 +69,11 @@ class ProductManagementResource extends Resource
             ]);
     }
 
+
+
     public static function table(Table $table): Table
     {
-        return $table
+        return $table->query(ProductManagement::whereIn('center_id', getCenters(auth()->user())))
             ->columns([
                 TextColumn::make('center_id')
                     ->label('Center')
@@ -95,6 +99,13 @@ class ProductManagementResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('printBarCode')
+                    ->label('Print Barcode')
+                    ->url(fn (ProductManagement $record) => url('admin/product-managements/barcode-generate',[
+                        $record->id
+                    ])) // Adjust the route name and parameters as needed
+                    ->icon('heroicon-o-document-text')
+                    ->color('success'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -116,6 +127,7 @@ class ProductManagementResource extends Resource
             'index' => Pages\ListProductManagement::route('/'),
             'create' => Pages\CreateProductManagement::route('/create'),
             'edit' => Pages\EditProductManagement::route('/{record}/edit'),
+            'barcode-generate' => Pages\BarcodeGenerator::route('/barcode-generate/{record}'),
         ];
     }
 }

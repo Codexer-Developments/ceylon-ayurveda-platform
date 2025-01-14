@@ -21,6 +21,8 @@ Route::post('post-order',[PosController::class, 'postOrder'])->name('patient.pos
 
 Route::get('pos-portal',[PosController::class, 'posPortal'])->name('patient.posPortal');
 
+Route::post('product-barcode',[PosController::class, 'productBarcode'])->name('product.barcode');
+Route::get('product-barcode-print/{product}/{qty}',[PosController::class, 'productBarcodePrint'])->name('product.print-barcode');
 
 
 
