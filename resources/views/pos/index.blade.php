@@ -16,13 +16,20 @@
                 <button class="nav-link" id="pills-doctor-appointment-tab" data-bs-toggle="pill" data-bs-target="#pills-doctor-appointment" type="button" role="tab" aria-controls="pills-doctor-appointment" aria-selected="false">Doctor Appointment</button>
             </li>
         </ul>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Ceylon Ayurvedic Platform:</strong> Revolutionize your Ayurvedic practice with our comprehensive Point of Sale system. Manage doctor appointments, streamline receipt management, and ensure smooth checkouts, all in one intuitive platform tailored for Ayurvedic centers. Ideal for enhancing operational efficiency and patient care seamlessly.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     </div>
 
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-product-sell-pos" role="tabpanel" aria-labelledby="pills-product-sell-pos-tab">
 
             <div class="container">
-                @if ($errors->any())
+
+
+
+            @if ($errors->any())
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
 
                     @foreach ($errors->all() as $error)
@@ -68,10 +75,13 @@
 
 
         document.addEventListener("DOMContentLoaded", function () {
+            // Define the specific tab IDs you want this functionality to apply to
+            const allowedTabIds = ["pills-product-sell-pos-tab", "pills-treatment-checkout-tab","pills-doctor-appointment-tab"]; // Replace with your specific tab IDs
+
             // Retrieve stored tab ID from localStorage
             const activeTabId = localStorage.getItem("activeTab");
 
-            if (activeTabId) {
+            if (activeTabId && allowedTabIds.includes(activeTabId)) {
                 // Activate the stored tab
                 const activeTab = document.querySelector(`#${activeTabId}`);
                 const tabContent = document.querySelector(activeTab.dataset.bsTarget);
@@ -88,10 +98,13 @@
             // Store the active tab ID when a tab is clicked
             document.querySelectorAll('.nav-link').forEach(tab => {
                 tab.addEventListener('click', function () {
-                    localStorage.setItem("activeTab", this.id);
+                    if (allowedTabIds.includes(this.id)) {
+                        localStorage.setItem("activeTab", this.id);
+                    }
                 });
             });
         });
+
     </script>
 
 <script>
@@ -131,13 +144,22 @@
 
         productList.forEach(product => {
             const productCard = document.createElement('div');
+            var imgData =  '{{url('img/product.png')}}';
             productCard.className = 'col-md-12';
             productCard.innerHTML = `
                     <div  class="card product-card" style="margin-bottom: 10px;height: 123px;" onclick="addToCart('${product.id}','${product.name}', ${product.price})">
                         <div class="card-body">
-                            <h5>${product.name}</h5>
-                            <p style="font-size: 12px;">${product.description}</p>
-                            <p >EUR ${product.price.toFixed(2)}</p>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img src="${imgData}" alt="" style="width: 50px;height: 50px;">
+                                </div>
+
+                                <div class="col-md-10">
+                                    <h5>${product.name}</h5>
+                                    <div style="font-size: 12px;">${product.description}</div>
+                                    <div style="background: #cd8603;padding: 3px;font-size: 15px;padding-left: 10px;padding-right: 10px;border-radius: 5px;width: 110px;margin-top: 10px;color: white;" >EUR ${product.price.toFixed(2)}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;

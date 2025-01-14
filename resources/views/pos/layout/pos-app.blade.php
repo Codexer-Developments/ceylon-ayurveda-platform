@@ -36,13 +36,29 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3>Ceylon Aryurvedic Point of Sale System</h3>
+                        <h5>Ceylon Aryurvedic Point of Sale System</h5><br>
                     </div>
+                    <div>Streamline doctor appointments, receipts, and sales in one platform.</div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-end align-items-center">
-
-
+                        <div class="d-flex justify-content-end align-items-center">
+                            <!-- Buttons -->
+                            <button class="btn btn-outline-light btn-sm me-2">Dashboard</button>
+                            <button class="btn btn-outline-light btn-sm me-2">Reports</button>
+                            <!-- Profile Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Profile
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" href="#">View Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,6 +66,7 @@
 
     </div>
 </div>
+
 
     <!-- Main Content Section -->
     @yield('content')
