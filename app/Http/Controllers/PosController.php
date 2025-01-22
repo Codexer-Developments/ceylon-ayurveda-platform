@@ -131,12 +131,34 @@ class PosController extends Controller
             'user_id' => auth()->user()->id,
         ];
 
+        // Check product stock before proceeding
+        foreach ($request->product_id as $key => $product) {
+            $productDetails = ProductManagement::where('product_id', $product)
+                ->where('center_id', $request->center_id_field)
+                ->first();
+
+            if (!$productDetails || $productDetails->quantity < $request->product_qty[$key]) {
+                // Redirect back with an error if stock is insufficient
+                return redirect()->back()->withErrors([
+                    'error' => "The product '{$productDetails->product->name}' is out of stock or has insufficient quantity."
+                ]);
+            }
+        }
+
+        // Proceed with order creation if all stock checks pass
         $orderDetails = SalesOrder::create($preparationData);
         $itemsList = [];
         foreach ($request->product_id as $key => $product) {
+            // Update product quantity
+            ProductManagement::where('product_id', $product)
+                ->where('center_id', $request->center_id_field)
+                ->update([
+                    'quantity' => DB::raw('quantity - ' . $request->product_qty[$key]),
+                ]);
+
             $productDetails = ProductManagement::where('product_id', $product)->first();
 
-           $productItem = [
+            $productItem = [
                 'sales_order_id' => $orderDetails->id,
                 'product_id' => $product,
                 'center_id' => $request->center_id_field,
@@ -150,18 +172,19 @@ class PosController extends Controller
             SalesOrderItem::create($productItem);
             $productItem['product_name'] = $productDetails->product->name;
             $itemsList[] = $productItem;
-
         }
+
         $preparationData['items'] = $itemsList;
 
         SalesOrder::where('id', $orderDetails->id)
             ->update(['order_note' => $preparationData]);
 
-        return redirect(url('invoice',[
-            'center_id' =>  $request->center_id_field,
+        return redirect(url('invoice', [
+            'center_id' => $request->center_id_field,
             'salesorder' => $orderDetails->id
         ]));
     }
+
 
     public function posPortal()
     {

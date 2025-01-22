@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PatientsResource\Pages;
 use App\Filament\Resources\PatientsResource\RelationManagers;
 use App\Models\Patients;
+use App\ResourceAccessTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,6 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Tabs;
 class PatientsResource extends Resource
 {
+    use ResourceAccessTrait;
+
     protected static ?string $model = Patients::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SaleOrdersResource\Pages;
 use App\Filament\Resources\SaleOrdersResource\RelationManagers;
+use App\ResourceAccessTrait;
 use Filament\Tables\Actions\Action;
 
 use Filament\Forms;
@@ -18,6 +19,8 @@ use Filament\Tables\Filters\Filter;
 
 class SaleOrdersResource extends Resource
 {
+    use ResourceAccessTrait;
+
     protected static ?string $model = SalesOrder::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

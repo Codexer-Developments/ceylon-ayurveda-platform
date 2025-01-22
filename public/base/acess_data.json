@@ -22,6 +22,14 @@
             "AppointmentsResource",
             "ProductManagementResource",
             "TreatmentManagementResource",
+            "ReportsResource",
+            "DoctorsResource",
+            "PatientsResource"
+        ]
+    },
+    "doctor": {
+        "access": [
+            "AppointmentsResource",
             "ReportsResource"
         ]
     },
