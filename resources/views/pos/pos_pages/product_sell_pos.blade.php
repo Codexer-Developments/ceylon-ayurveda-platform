@@ -28,7 +28,7 @@
                     <h4 style="font-size: 18px;padding-top: 10px">Patient Details </h4>
                     <div style="display: flex">
                         <input type="text" id="search-customer-input" class="form-control mb-3" placeholder="Search Address, Name, Etc" onkeyup="searchCustomer()"/>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary" style="height: 40px;margin-left: 10px;">+</a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#addcustomerdialogpos" class="btn btn-primary" style="height: 40px;margin-left: 10px;">+</a>
                     </div>
 
                     <div class="row">

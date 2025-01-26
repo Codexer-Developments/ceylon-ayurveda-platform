@@ -9,6 +9,7 @@ use App\Models\ProductManagement;
 use App\Models\Products;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
+use App\Models\User;
 use App\Services\PosAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +19,10 @@ class PosController extends Controller
 {
     public function pos(Centers $centers, Request $request)
     {
+        $doctors = User::where('center_id', $centers->id)->where('role', 'doctor')->get();;
         return view('pos.index',[
             'center' => $centers,
+            'doctors' => $doctors
         ]);
     }
 

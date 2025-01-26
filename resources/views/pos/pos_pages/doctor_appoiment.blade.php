@@ -28,41 +28,94 @@
 <body>
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="mt-4">
-               <div class="card">
-                   <div class="card-header" style="background: #0d6efd;color: white;">
-                          Appointments
-                   </div>
-                   <div class="card-body">
-                       <ul id="appointmentList" class="list-group">
-                           <!-- Appointment details will appear here -->
-                       </ul>
-                   </div>
-               </div>
+                <div class="card">
+                    <div class="card-header" style="background: #0d6efd;color: white;">
+                        Add Appointment
+                    </div>
+                    <div class="card-body">
+                        <div style="margin-bottom: 10px">
+                            <form action="" method="post">
+                                {{csrf_field()}}
+                                <div class="form-group">
+                                    <input type="hidden" id="patient_id_doc_appointment" class="form-control" name="patient_id_doc_appointment">
+                                </div>
 
+                                <label for="patient_name_doc_appointment">Patient:</label>
+                                <div style="display: flex">
+                                    <input type="text" id="patient_name_doc_appointment" name="patient_name_doc_appointment" class="form-control">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addcustomerdialogposdoc_appoitment" class="btn btn-primary small" style="height: 40px;margin-left: 10px;">+</a>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Doctor Name</label>
+                                    <select name="doctor_id" class="form-select">
+                                        @foreach($doctors as $docItem)
+                                            <option value="{{$docItem->id}}">{{$docItem->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group>
+                                   <label for="date">Date:</label>
+                                <input type="date" id="date" name="date" class="form-control">
+
+                        <input type="hidden" name="center_id" value="{{$center->id}}">
+
+                        <div class="form-group">
+                            <label for="time">Time:</label>
+                            <input type="time" id="time" name="time" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea name="description" rows="5" class="form-control"></textarea>
+                        </div> <br>
+                        <button type="submit" class="btn btn-primary"> Add Appointment</button>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <button class="btn btn-primary" id="prevMonth">&lt; Previous</button>
-                <h2 id="currentMonth"></h2>
-                <button class="btn btn-primary" id="nextMonth">Next &gt;</button>
+
+        <div class="col-md-3">
+            <div class="mt-4">
+                <div class="card">
+                    <div class="card-header" style="background: #0d6efd;color: white;">
+                        Appointments
+                    </div>
+
+                    <ul id="appointmentList" class="list-group">
+                        <!-- Appointment details will appear here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-primary" id="prevMonth">&lt; Previous</button>
+                    <h2 id="currentMonth"></h2>
+                    <button class="btn btn-primary" id="nextMonth">Next &gt;</button>
+                </div>
+
+                <div class="calendar" id="calendar">
+                    <!-- Days of the week -->
+                    <div class="fw-bold">Sun</div>
+                    <div class="fw-bold">Mon</div>
+                    <div class="fw-bold">Tue</div>
+                    <div class="fw-bold">Wed</div>
+                    <div class="fw-bold">Thu</div>
+                    <div class="fw-bold">Fri</div>
+                    <div class="fw-bold">Sat</div>
+                </div>
             </div>
 
-            <div class="calendar" id="calendar">
-                <!-- Days of the week -->
-                <div class="fw-bold">Sun</div>
-                <div class="fw-bold">Mon</div>
-                <div class="fw-bold">Tue</div>
-                <div class="fw-bold">Wed</div>
-                <div class="fw-bold">Thu</div>
-                <div class="fw-bold">Fri</div>
-                <div class="fw-bold">Sat</div>
-            </div>
         </div>
     </div>
-
 </div>
 
 <script>

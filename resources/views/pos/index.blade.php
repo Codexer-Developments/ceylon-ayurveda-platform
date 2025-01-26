@@ -56,10 +56,37 @@
 
 
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 
-@include('pos.dialog.add_customer')
+@include('pos.dialog.add_customer',[
+    'dialogId' => 'addcustomerdialogpos',
+    'dialogTitle' => 'Add Customer',
+    'updateParameter' => [
+        'inputId' => 'patient_id',
+        'inputName' => 'patient_name',
+        'inputEmail' => 'patient_email',
+        'inputPhone' => 'patient_phone_number',
+        'inputAddress' => 'patient_address',
+        'inputIdField' => 'patient_id',
+        'inputCenterIdField' => 'center_id_field',
+    ]
+])
+
+    @include('pos.dialog.add_customer',[
+    'dialogId' => 'addcustomerdialogposdoc_appoitment',
+    'dialogTitle' => 'Add Customer Doctor Appoitment',
+    'updateParameter' => [
+        'inputId' => 'patient_id_doc_appointment',
+        'inputName' => 'patient_name_doc_appointment',
+        'inputEmail' => 'patient_email_doc_appoitment',
+        'inputPhone' => 'patient_phone_number_doc_appoitment',
+        'inputAddress' => 'patient_address_appoitment',
+        'inputIdField' => 'patient_id_appoitment',
+        'inputCenterIdField' => 'center_id_field_appoitment',
+    ]
+])
 
 
     <script>
