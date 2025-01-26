@@ -19,8 +19,6 @@ return new class extends Migration
             $table->text('patient_id');
             $table->text('center_id');
             $table->text('doctor_id');
-            $table->text('created_by');
-            $table->text('updated_by')->nullable();
             $table->timestamps();
         });
     }

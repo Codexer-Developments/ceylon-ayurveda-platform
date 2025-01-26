@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\PosController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppointmentController;
+
 use App\Http\Controllers\TestingController;
 Route::get('/', function () {
     return view('welcome');
@@ -25,5 +27,13 @@ Route::post('product-barcode',[PosController::class, 'productBarcode'])->name('p
 Route::get('product-barcode-print/{product}/{qty}',[PosController::class, 'productBarcodePrint'])->name('product.print-barcode');
 
 
+Route::get('/getAppointments', [AppointmentController::class, 'getAppointments']);
+Route::post('getAppointments/store', [AppointmentController::class, 'store']);
 
+
+Route::get('/appointments/{date}', function ($date) {
+    // Replace with your actual query logic
+    $appointments = \App\Models\DoctorAppointment::whereDate('date', $date)->pluck('description');
+    return response()->json($appointments);
+});
 

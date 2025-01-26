@@ -38,7 +38,7 @@
                             </div>
                             <div class="card-body">
                                 <div style="margin-bottom: 10px">
-                                    <form action="" method="post">
+                                    <form action="{{url('getAppointments/store')}}" method="post">
                                         {{csrf_field()}}
                                         <div class="form-group">
                                             <input type="hidden" id="patient_id_doc_appointment" class="form-control" name="patient_id_doc_appointment">
@@ -101,7 +101,7 @@
                                 <div class=" ">
                                     <div class="card">
                                         <div class="card-header" style="background: #0d6efd;color: white;">
-                                            Appointments
+                                            Appointments Details
                                         </div>
 
                                         <ul id="appointmentList" class="list-group">
@@ -176,6 +176,34 @@
         ]
     };
 
+
+    function displayAppointments(dateKey) {
+        appointmentList.innerHTML = '<li class="list-group-item">Loading...</li>'; // Show a loading message
+
+        fetch(`/appointments/${dateKey}`)
+            .then(response => response.json())
+            .then(data => {
+                appointmentList.innerHTML = ''; // Clear the list
+                if (data.length > 0) {
+                    data.forEach(appointment => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = appointment;
+                        appointmentList.appendChild(li);
+                    });
+                } else {
+                    appointmentList.innerHTML = '<li class="list-group-item">No appointments for this day.</li>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching appointments:', error);
+                appointmentList.innerHTML = '<li class="list-group-item text-danger">Error loading appointments.</li>';
+            });
+    }
+
+
+
+
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
@@ -186,47 +214,47 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         calendar.innerHTML = `
-                <div class="fw-bold">Sun</div>
-                <div class="fw-bold">Mon</div>
-                <div class="fw-bold">Tue</div>
-                <div class="fw-bold">Wed</div>
-                <div class="fw-bold">Thu</div>
-                <div class="fw-bold">Fri</div>
-                <div class="fw-bold">Sat</div>
-            `;
+        <div class="fw-bold">Sun</div>
+        <div class="fw-bold">Mon</div>
+        <div class="fw-bold">Tue</div>
+        <div class="fw-bold">Wed</div>
+        <div class="fw-bold">Thu</div>
+        <div class="fw-bold">Fri</div>
+        <div class="fw-bold">Sat</div>
+    `;
 
         for (let i = 0; i < firstDay; i++) {
             calendar.innerHTML += '<div class="day inactive"></div>';
         }
 
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day';
-            dayElement.textContent = day;
+        // Fetch appointments dynamically
+        fetch(`/getAppointments?year=${year}&month=${month + 1}`)
+            .then(response => response.json())
+            .then(data => {
+                const appointments = data;
 
-            if (appointments[dateKey]) {
-                dayElement.classList.add('active');
-            }
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'day';
+                    dayElement.textContent = day;
 
-            dayElement.addEventListener('click', () => {
-                displayAppointments(dateKey);
+                    if (appointments[dateKey]) {
+                        dayElement.classList.add('active');
+                    }
+
+                    dayElement.addEventListener('click', () => {
+                        displayAppointments(dateKey, appointments[dateKey] || []);
+                    });
+
+                    calendar.appendChild(dayElement);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching appointments:', error);
             });
-
-            calendar.appendChild(dayElement);
-        }
     }
 
-    function displayAppointments(dateKey) {
-        appointmentList.innerHTML = '';
-        const dayAppointments = appointments[dateKey] || [`No appointments for this day.`];
-        dayAppointments.forEach(appointment => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item';
-            li.textContent = appointment;
-            appointmentList.appendChild(li);
-        });
-    }
 
     document.getElementById('prevMonth').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
