@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+
     public function getAppointments(Request $request)
     {
         // Validate input
@@ -18,30 +19,31 @@ class AppointmentController extends Controller
         $year = $request->input('year');
         $month = $request->input('month');
 
-        // Example: Simulating fetching appointments from a database
-        $appointments = [
-            '2025-01-01' => ['Meeting with John', 'Doctor Appointment'],
-            '2025-01-05' => ['Team Lunch'],
-            '2025-01-12' => ['Project Deadline'],
-        ];
+        // Fetch appointments from the database
+        $appointments = DoctorAppointment::whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->get()
+            ->groupBy(function ($appointment) {
+                return date('Y-m-d', strtotime($appointment->date)); // Group by date only (no time)
+            })
+            ->map(function ($appointments) {
+                return $appointments->pluck('description')->toArray(); // Extract descriptions
+            });
 
-        // Filter appointments for the requested year and month
-        $filteredAppointments = array_filter($appointments, function ($date) use ($year, $month) {
-            return date('Y', strtotime($date)) == $year && date('n', strtotime($date)) == $month;
-        }, ARRAY_FILTER_USE_KEY);
-
-        return response()->json($filteredAppointments);
+        return response()->json($appointments);
     }
 
     public function store(Request $request)
     {
-        DoctorAppointment::create([
+       $doctor =  DoctorAppointment::create([
             'description' => $request->input('description'),
-            'status' => $request->input('status'),
+            'status' => 'pending',
             'date' => $request->input('date'),
             'patient_id' => $request->input('patient_id_doc_appointment'),
             'center_id' => $request->input('center_id'),
             'doctor_id' => $request->input('doctor_id'),
         ]);
+
+        return back()->with('success', 'Appointment created successfully!');
     }
 }

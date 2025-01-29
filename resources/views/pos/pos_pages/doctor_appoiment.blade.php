@@ -38,7 +38,7 @@
                             </div>
                             <div class="card-body">
                                 <div style="margin-bottom: 10px">
-                                    <form action="{{url('getAppointments/store')}}" method="post">
+                                    <form action="{{url('getAppointments/store')}}" method="post" id="appoitmentStore">
                                         {{csrf_field()}}
                                         <div class="form-group">
                                             <input type="hidden" id="patient_id_doc_appointment" class="form-control" name="patient_id_doc_appointment">
