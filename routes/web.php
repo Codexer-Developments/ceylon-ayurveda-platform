@@ -2,8 +2,9 @@
 use App\Http\Controllers\PosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppointmentController;
-
 use App\Http\Controllers\TestingController;
+use App\Http\Controllers\PatientController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,6 +27,7 @@ Route::get('pos-portal',[PosController::class, 'posPortal'])->name('patient.posP
 Route::post('product-barcode',[PosController::class, 'productBarcode'])->name('product.barcode');
 Route::get('product-barcode-print/{product}/{qty}',[PosController::class, 'productBarcodePrint'])->name('product.print-barcode');
 
+Route::get('patient/{patient}',[PatientController::class, 'patient'])->name('patient');
 
 Route::get('/getAppointments', [AppointmentController::class, 'getAppointments']);
 Route::post('getAppointments/store', [AppointmentController::class, 'store']);
