@@ -39,3 +39,8 @@ Route::get('/appointments/{date}', function ($date) {
     return response()->json($appointments);
 });
 
+
+Route::get('/purchase-orders/{id}/invoice', function ($id) {
+    $purchaseOrder = \App\Models\PurchaseOrder::with(['supplier', 'items.product'])->findOrFail($id);
+    return view('purchase_orders.report', compact('purchaseOrder'));
+})->name('purchase-orders.invoice');
