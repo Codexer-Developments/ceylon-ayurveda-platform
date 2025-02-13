@@ -18,4 +18,10 @@ class PurchaseOrder extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
+
+    public function goodsReceivedNotes()
+    {
+        return $this->hasMany(GoodsReceivedNote::class, 'purchase_order_id');
+    }
+
 }
