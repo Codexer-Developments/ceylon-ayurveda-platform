@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GoodsReceivedNoteResource\Pages;
 use App\Filament\Resources\GoodsReceivedNoteResource\RelationManagers;
+use App\Models\Centers;
 use App\Models\GoodsReceivedNote;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,12 +28,25 @@ class GoodsReceivedNoteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Purchase';
+
+
     public static function form(Form $form): Form
     {
+        $centerDetails = Centers::whereIn('id', getCenters(auth()->user()))->pluck('center_name', 'id');
+
         return $form
             ->schema([
                 Forms\Components\Section::make('Goods Received Note Details')
                     ->schema([
+
+                        Forms\Components\Select::make('center_id')
+                            ->label('Center')
+                            ->options($centerDetails)
+                            ->required(),
+
+
+
                         Select::make('purchase_order_id')
                             ->label('Purchase Order')
                             ->options(PurchaseOrder::pluck('order_number', 'id'))
@@ -65,7 +79,7 @@ class GoodsReceivedNoteResource extends Resource
                                 Select::make('product_id')
                                     ->relationship('product', 'name')
                                     ->required()
-                                    ->disabled()
+                                    ->reactive()
                                     ->default(fn ($record) => $record?->product_id), // Ensure product ID is preloaded
 
                                 TextInput::make('received_quantity')

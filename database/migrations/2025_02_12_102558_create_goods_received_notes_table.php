@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('purchase_order_id')->constrained('purchase_orders')->onDelete('cascade');
             $table->string('grn_number')->unique();
             $table->date('received_date');
+            $table->string('center_id');
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });

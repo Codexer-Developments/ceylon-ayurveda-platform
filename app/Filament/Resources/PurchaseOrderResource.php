@@ -5,6 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PurchaseOrderResource\Pages;
 use App\Filament\Resources\PurchaseOrderResource\RelationManagers;
 use App\Models\Centers;
+use App\Models\GoodsReceivedNote;
+use App\Models\ProductManagement;
+use App\Models\Products;
 use App\Models\PurchaseOrder;
 use Filament\Actions\Action;
 use Filament\Forms;
@@ -34,20 +37,28 @@ class PurchaseOrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Purchase';
+
+
     public static function form(Form $form): Form
     {
         $centerDetails = Centers::whereIn('id', getCenters(auth()->user()))->pluck('center_name', 'id');
+
         return $form
             ->schema([
                 Section::make('Purchase Order Details')
                     ->schema([
-                        Forms\Components\Grid::make('2')
+                        Forms\Components\Grid::make(2)
                             ->schema([
                                 Section::make('Purchase Order Details')->schema([
-                                    Forms\Components\Select::make('center_id')
+                                    Select::make('center_id')
                                         ->label('Center')
                                         ->options($centerDetails)
-                                        ->required(),
+                                        ->required()
+                                        ->reactive()
+                                        ->live() // Ensure dynamic updates
+                                        ->afterStateUpdated(fn (callable $set) => $set('items', [])), // Reset items when center changes
+
                                     TextInput::make('order_number')
                                         ->required()
                                         ->unique(),
@@ -73,9 +84,31 @@ class PurchaseOrderResource extends Resource
                             ->relationship()
                             ->schema([
                                 Select::make('product_id')
-                                    ->relationship('product', 'name')
+                                    ->label('Product')
+                                    ->options(function (callable $get, callable $set) {
+                                        $centerId = $get('center_id');
+
+                                        if (!$centerId) {
+                                            return [];
+                                        }
+
+                                        // Get available products for the selected center
+                                        $productIds = ProductManagement::where('center_id', $centerId)
+                                            ->pluck('product_id');
+
+                                        $products = Products::whereIn('id', $productIds)->pluck('name', 'id');
+
+                                        // Save the options for later use
+                                        $set('product_options', $products->toArray());
+
+                                        return $products;
+                                    })
+                                    ->reactive()
                                     ->required()
-                                    ->reactive(),
+                                    ->afterStateHydrated(fn ($state, callable $set) =>
+                                    $set('product_options', Products::where('id', $state)->pluck('name', 'id')->toArray())
+                                    ),
+
                                 TextInput::make('quantity')
                                     ->numeric()
                                     ->default(1)
@@ -84,6 +117,7 @@ class PurchaseOrderResource extends Resource
                                     ->afterStateUpdated(fn ($state, callable $set, callable $get) =>
                                     $set('total', ($state ?? 1) * ($get('price') ?? 0))
                                     ),
+
                                 TextInput::make('price')
                                     ->numeric()
                                     ->required()
@@ -91,10 +125,11 @@ class PurchaseOrderResource extends Resource
                                     ->afterStateUpdated(fn ($state, callable $set, callable $get) =>
                                     $set('total', ($state ?? 0) * ($get('quantity') ?? 1))
                                     ),
+
                                 TextInput::make('total')
                                     ->numeric()
                                     ->disabled()
-                                    ->dehydrated() // Ensures total is saved
+                                    ->dehydrated()
                                     ->default(0),
                             ])
                             ->columns(4)
@@ -105,7 +140,6 @@ class PurchaseOrderResource extends Resource
                     ]),
             ]);
     }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -122,6 +156,15 @@ class PurchaseOrderResource extends Resource
                     ->url(fn ($record) => route('purchase-orders.invoice', $record->id))
                     ->openUrlInNewTab()
                     ->icon('heroicon-o-printer'),
+
+                Tables\Actions\Action::make('Goods Re-v Notes')
+                    ->icon('heroicon-o-document-text')
+                    ->modalHeading('Goods Received Notes Summary')
+                    ->modalDescription('Summary of goods received under this purchase order.')
+                    ->modalContent(fn ($record) => view('filament.modals.grn-summary', [
+                        'goodsReceivedNotes' => GoodsReceivedNote::where('purchase_order_id', $record->id)->get()
+                    ])),
+
             ])
             ->filters([
                 //

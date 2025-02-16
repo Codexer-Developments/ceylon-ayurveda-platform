@@ -9,7 +9,7 @@ class GoodsReceivedNote extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['purchase_order_id', 'grn_number', 'received_date', 'total_amount'];
+    protected $fillable = ['purchase_order_id', 'grn_number', 'received_date', 'total_amount', 'center_id'];
     protected $table = 'goods_received_notes';  // Explicitly define the table
     protected $primaryKey = 'id'; // Ensure this matches your actual primary key
 
