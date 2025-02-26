@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('key')->unique();
             $table->text('value')->nullable();
+            $table->boolean('required')->default(false);
+            $table->text('options')->nullable();
+            $table->string('placeholder')->nullable();
+            $table->string('group');
+            $table->string('type')->default('text');
+            $table->string('label');
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\ProductManagementResource\Pages\BarcodeGenerate;
+use App\Models\Setting;
 use App\Services\PosAccessService;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -62,6 +63,10 @@ class AdminPanelProvider extends PanelProvider
                     ->url(url('pos-portal'), shouldOpenInNewTab: true)
                     ->icon('heroicon-o-shopping-cart')
                     ->group('External'),
+                NavigationItem::make('Settings')
+                    ->icon('heroicon-o-cog')
+                    ->url(fn () => route('filament.admin.resources.settings.edit', Setting::first()->id ?? 1))
+                    ->sort(1),
             ]);
     }
 }
