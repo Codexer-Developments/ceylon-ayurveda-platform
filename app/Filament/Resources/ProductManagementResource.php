@@ -30,6 +30,9 @@ class ProductManagementResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Products';
+
+
     public static function form(Form $form): Form
     {
         $getCenterDetails = Centers::where('owner_id', auth()->user()->id)

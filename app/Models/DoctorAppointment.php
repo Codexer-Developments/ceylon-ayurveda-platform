@@ -19,4 +19,13 @@ class DoctorAppointment extends Model
         'created_by',
         'updated_by',
     ];
+
+
+    public function patient()
+    {
+        return $this->belongsTo(Patients::class, 'patient_id');
+    }
+
+    // Define the relationship with DoctorAppointment
+
 }

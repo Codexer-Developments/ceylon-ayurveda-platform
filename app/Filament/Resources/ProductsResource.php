@@ -25,6 +25,9 @@ class ProductsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-square-2-stack';
 
+    protected static ?string $navigationGroup = 'Products';
+
+
     public static function form(Form $form): Form
     {
         $categoryDetails = ProductCategory::pluck('name', 'id')->toArray();
