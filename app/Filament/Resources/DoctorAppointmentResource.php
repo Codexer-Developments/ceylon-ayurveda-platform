@@ -25,6 +25,9 @@ class DoctorAppointmentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
+    protected static ?string $navigationGroup = 'Doctors Managements';
+
+
     public static function form(Forms\Form $form): Forms\Form
     {
         $getCentersAuth = Centers::whereIn('id', getCenters(auth()->user()))->pluck('center_name', 'id')->toArray();

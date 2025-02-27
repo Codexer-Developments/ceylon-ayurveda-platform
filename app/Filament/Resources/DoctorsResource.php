@@ -22,6 +22,9 @@ class DoctorsResource extends Resource
 
     protected static ?string $model = User::class;
 
+    protected static ?string $navigationGroup = 'Doctors Managements';
+
+
     public static function getLabel(): string
     {
         return 'Doctor';

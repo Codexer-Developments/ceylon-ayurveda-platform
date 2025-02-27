@@ -8,6 +8,7 @@
             "TreatmentsResource",
             "AppointmentsResource",
             "ReportsResource",
+            "DoctorsResource",
             "SettingsResource"
         ]
     },

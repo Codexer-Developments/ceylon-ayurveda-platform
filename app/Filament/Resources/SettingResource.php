@@ -23,12 +23,12 @@ use Filament\Forms\Components\Select;
 class SettingResource extends Resource
 {
     protected static ?string $model = Setting::class;
-
-
+    
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $navigationLabel = 'Settings';
     protected static ?string $slug = 'settings';
     protected static ?int $navigationSort = 1;
+
 
 
 
