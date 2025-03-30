@@ -5,6 +5,8 @@ namespace App\Providers\Filament;
 use App\Filament\Resources\ProductManagementResource\Pages\BarcodeGenerate;
 use App\Models\Setting;
 use App\Services\PosAccessService;
+use App\Filament\Widgets\SalesChart;
+use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,7 +28,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
         return $panel
             ->default()
             ->id('admin')
@@ -37,13 +38,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-
-            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                StatsOverview::class,
+                SalesChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -58,7 +56,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])->navigationItems([
+            ])
+            ->navigationItems([
                 NavigationItem::make('Sales')
                     ->url(url('pos-portal'), shouldOpenInNewTab: true)
                     ->icon('heroicon-o-shopping-cart')

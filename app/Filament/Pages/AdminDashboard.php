@@ -2,24 +2,23 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Resources\UserResource\Widgets\TotalUsersWidget;
-use Filament\Pages\Page;
-use App\Models\User;
-use App\Models\Products;
-use App\Models\Centers;
+use App\Filament\Widgets\SalesChart;
+use App\Filament\Widgets\StatsOverview;
+use Filament\Pages\Dashboard as BaseDashboard;
 
-class AdminDashboard extends Page
+class AdminDashboard extends BaseDashboard
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
-    protected static string $view = 'filament.pages.admin-dashboard';
-
-    public function mount()
+    public function getHeaderWidgets(): array
     {
-        // Pass data to the page if needed
-        $this->totalUsers = User::where('role','manager')->count();
-        $this->totalProducts = Products::where('status', 1)->count();
-        $this->totalCenters = Centers::where('status', 1)->count();
+        return [
+            StatsOverview::class,
+        ];
     }
 
+    public function getWidgets(): array
+    {
+        return [
+            SalesChart::class,
+        ];
+    }
 }
