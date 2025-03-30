@@ -20,4 +20,29 @@ class Centers extends Model
         'status',
         'owner_id'
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function doctors()
+    {
+        return $this->hasMany(User::class, 'center_id')->where('role', 'doctor');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(DoctorAppointment::class, 'center_id');
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(SalesOrder::class, 'center_id');
+    }
+
+    public function goodReceiveNotes()
+    {
+        return $this->hasMany(GoodsReceivedNote::class, 'center_id');
+    }
 }

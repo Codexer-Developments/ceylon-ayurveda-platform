@@ -24,9 +24,6 @@ class CentersResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-
-
-
     public static function form(Form $form): Form
     {
         $userDetails = User::where('role', 'manager')->pluck('name', 'id')->toArray();
@@ -73,6 +70,7 @@ class CentersResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -83,7 +81,10 @@ class CentersResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DoctorsRelationManager::class,
+            RelationManagers\AppointmentsRelationManager::class,
+            RelationManagers\SalesRelationManager::class,
+            RelationManagers\GoodReceiveNotesRelationManager::class,
         ];
     }
 
@@ -92,9 +93,8 @@ class CentersResource extends Resource
         return [
             'index' => Pages\ListCenters::route('/'),
             'create' => Pages\CreateCenters::route('/create'),
+            'view' => Pages\ViewCenters::route('/{record}'),
             'edit' => Pages\EditCenters::route('/{record}/edit'),
         ];
     }
-
-
 }
